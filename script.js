@@ -1,14 +1,11 @@
 const inputElement = document.querySelector(".new-task-input");
 const addTaskButton = document.querySelector(".new-task-button");
-
 const tasksContainer = document.querySelector(".tasks-container");
 
 const validateInput = () => inputElement.value.trim().length > 0;
 
 const handleAddTask = () => {
   const inputIsValid = validateInput();
-
-  console.log(inputIsValid);
 
   if (!inputIsValid) {
     return inputElement.classList.add("error");
@@ -20,18 +17,22 @@ const handleAddTask = () => {
   const taskContent = document.createElement("p");
   taskContent.innerText = inputElement.value;
 
-  taskContent.addEventListener("click", () => handleClick(taskContent));
+  const completeItem = document.createElement("i");
+  completeItem.classList.add("far", "fa-check-circle");
+  completeItem.addEventListener("click", () => handleCompleteClick(taskItemContainer, taskContent));
+
+  const editItem = document.createElement("i");
+  editItem.classList.add("far", "fa-edit");
+  editItem.addEventListener("click", () => handleEditClick(taskItemContainer, taskContent));
 
   const deleteItem = document.createElement("i");
-  deleteItem.classList.add("far");
-  deleteItem.classList.add("fa-trash-alt");
-
-  deleteItem.addEventListener("click", () =>
-    handleDeleteClick(taskItemContainer, taskContent)
-  );
+  deleteItem.classList.add("far", "fa-trash-alt");
+  deleteItem.addEventListener("click", () => handleDeleteClick(taskItemContainer, taskContent));
 
   taskItemContainer.appendChild(taskContent);
   taskItemContainer.appendChild(deleteItem);
+  taskItemContainer.appendChild(completeItem);
+  taskItemContainer.appendChild(editItem);
 
   tasksContainer.appendChild(taskItemContainer);
 
@@ -40,31 +41,22 @@ const handleAddTask = () => {
   updateLocalStorage();
 };
 
-const handleClick = (taskContent) => {
-  const tasks = tasksContainer.childNodes;
+const handleEditClick = (taskItemContainer, taskContent) => {
+  const updatedTaskContent = prompt("Editar tarefa:", taskContent.innerText);
 
-  for (const task of tasks) {
-    const currentTaskIsBeingClicked = task.firstChild.isSameNode(taskContent);
-
-    if (currentTaskIsBeingClicked) {
-      task.firstChild.classList.toggle("completed");
-    }
+  if (updatedTaskContent !== null && updatedTaskContent.trim().length > 0) {
+    taskContent.innerText = updatedTaskContent;
+    updateLocalStorage();
   }
+};
 
+const handleCompleteClick = (taskItemContainer, taskContent) => {
+  taskContent.classList.toggle("completed");
   updateLocalStorage();
 };
 
 const handleDeleteClick = (taskItemContainer, taskContent) => {
-  const tasks = tasksContainer.childNodes;
-
-  for (const task of tasks) {
-    const currentTaskIsBeingClicked = task.firstChild.isSameNode(taskContent);
-
-    if (currentTaskIsBeingClicked) {
-      taskItemContainer.remove();
-    }
-  }
-
+  taskItemContainer.remove();
   updateLocalStorage();
 };
 
@@ -105,18 +97,22 @@ const refreshTasksUsingLocalStorage = () => {
       taskContent.classList.add("completed");
     }
 
-    taskContent.addEventListener("click", () => handleClick(taskContent));
+    const completeItem = document.createElement("i");
+    completeItem.classList.add("far", "fa-check-circle");
+    completeItem.addEventListener("click", () => handleCompleteClick(taskItemContainer, taskContent));
+
+    const editItem = document.createElement("i");
+    editItem.classList.add("far", "fa-edit");
+    editItem.addEventListener("click", () => handleEditClick(taskItemContainer, taskContent));
 
     const deleteItem = document.createElement("i");
-    deleteItem.classList.add("far");
-    deleteItem.classList.add("fa-trash-alt");
-
-    deleteItem.addEventListener("click", () =>
-      handleDeleteClick(taskItemContainer, taskContent)
-    );
+    deleteItem.classList.add("far", "fa-trash-alt");
+    deleteItem.addEventListener("click", () => handleDeleteClick(taskItemContainer, taskContent));
 
     taskItemContainer.appendChild(taskContent);
     taskItemContainer.appendChild(deleteItem);
+    taskItemContainer.appendChild(completeItem);
+    taskItemContainer.appendChild(editItem);
 
     tasksContainer.appendChild(taskItemContainer);
   }
