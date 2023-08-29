@@ -39,7 +39,8 @@ body {
   border-radius: 5px;
   padding: 12px;
   font-weight: 500;
-  margin-right: 10px; /* Espaçamento entre o input e o botão */
+  margin-right: 10px;
+  width: 100%;
 }
 
 .new-task-button {
